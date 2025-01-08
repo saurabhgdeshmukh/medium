@@ -1,29 +1,38 @@
-import { Appbar } from "../components/Appbar";
-import { FullBlog } from "../components/FullBlog";
-import { Spinner } from "../components/Spinner";
-import { useBlog } from "../hooks";
-import {useParams} from "react-router-dom";
+import { Appbar } from "../components/Appbar"
+import { BlogCard } from "../components/BlogCard"
+import { BlogSkeleton } from "../components/BlogSkeleton";
+import { useBlogs } from "../hooks";
 
-// atomFamilies/selectorFamilies
-export const Blog = () => {
-    const { id } = useParams();
-    const {loading, blog} = useBlog({
-        id: id || ""
-    });
+export const Blogs = () => {
+    const { loading, blogs } = useBlogs();
 
-    if (loading || !blog) {
+    if (loading) {
         return <div>
-            <Appbar />
-        
-            <div className="h-screen flex flex-col justify-center">
-                
-                <div className="flex justify-center">
-                    <Spinner />
+            <Appbar /> 
+            <div  className="flex justify-center">
+                <div>
+                    <BlogSkeleton />
+                    <BlogSkeleton />
+                    <BlogSkeleton />
+                    <BlogSkeleton />
+                    <BlogSkeleton />
                 </div>
             </div>
         </div>
     }
+
     return <div>
-        <FullBlog blog={blog} />
+        <Appbar />
+        <div  className="flex justify-center">
+            <div>
+                {blogs.map(blog => <BlogCard
+                    id={blog.id}
+                    authorName={blog.author.name || "Anonymous"}
+                    title={blog.title}
+                    content={blog.content}
+                    publishedDate={"2nd Feb 2024"}
+                />)}
+            </div>
+        </div>
     </div>
 }
